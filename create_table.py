@@ -45,5 +45,26 @@ class CreateTable:
     
     def update_df(self,df):
         self.df=df
-
+    
+    def end_day_calc(self,titles):
+        d=self.date
+        total_df=self.get_df(None,None)
+        total_df["Total"]=pd.to_numeric(total_df["Total"],errors='coerce').fillna(0)
+        total_df["Cantidad"]=pd.to_numeric(total_df["Cantidad"],errors="coerce").fillna(0)
+        
+        for i in titles:
+            df=self.get_df(d,i)
+            df["Total"]=pd.to_numeric(df["Total"],errors="coerce").fillna(0)
+            df["Cantidad"]=pd.to_numeric(df["Cantidad"],errors="coerce").fillna(0)
+            total_df["Total"]=total_df["Total"]+df["Total"]
+            total_df["Cantidad"]=total_df["Cantidad"]+df["Cantidad"]
+        total_df["Total"]=total_df["Total"].replace(0,"")
+        total_df["Cantidad"]=total_df["Cantidad"].replace(0,"")
+        
+        f_path=os.path.join(self.folder_path,"Total_dia.csv")
+        
+        if os.path.exists(f_path):
+            os.remove(os.path.abspath(f_path))
+        total_df.to_csv(f_path,index=False,sep=";",na_rep="")       
+    
 

@@ -8,6 +8,7 @@ import os
 from editable_table import EditableTreeview
 
 
+
 class BillingPage(tk.Frame):
     def __init__(self, master, controller, window_size, date=None, folder=None):
         # Initialize billing page frame
@@ -52,7 +53,7 @@ class BillingPage(tk.Frame):
         # Create table to show the bill
         self.set_table()
 
-    def set_table(self):
+    def set_table(self,end_day=None):
         # Create a new frame for the table
         self.table_frame = tk.Frame(self, width=int(0.85 * self.window_width - 3 * self.start_position[0]),
                                     height=int(0.75 * self.window_height - 3 * self.start_position[1]))
@@ -74,7 +75,13 @@ class BillingPage(tk.Frame):
 
         # Get the dataframe using the date
         self.df_creator = CreateTable()
-        self.df = self.df_creator.get_df(self.date,self.title)
+        if end_day:
+            self.df=self.df_creator.get_df(self.date, "Total_dia")
+            if "Total_dia" not in self.selector_listbox.get(0,tk.END):
+                self.selector_listbox.insert(tk.END, f"Total_dia")
+        else:
+            self.df = self.df_creator.get_df(self.date,self.title)
+
         df_columns = list(self.df.columns)
 
         # Create a new frame for the treeview widget
@@ -122,8 +129,11 @@ class BillingPage(tk.Frame):
         self.save_bill_button = ttk.Button(self.top_frame, text="Guardar factura", command=self.save_bill)
         self.save_bill_button.pack(side=tk.LEFT, padx=5, pady=5)
 
-        self.new_bill_button = ttk.Button(self.top_frame, text="Nueva factura", command=self.save_bill)
+        self.new_bill_button = ttk.Button(self.top_frame, text="Nueva factura", command=self.new_bill)
         self.new_bill_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+        self.end_day_button = ttk.Button(self.top_frame, text="Cerrar dia", command=self.end_day)
+        self.end_day_button.pack(side=tk.LEFT, padx=5, pady=5)
 
         self.bill_title_socket=ttk.Label(self.top_frame,text="")
         self.bill_title_socket.pack(side=tk.LEFT,padx=5,pady=5)
@@ -165,10 +175,17 @@ class BillingPage(tk.Frame):
         selected_index=self.selector_listbox.curselection()
         if selected_index:
             selected_item=str(self.selector_listbox.get(selected_index)).split("_")
-            self.viewable_bill=int(selected_item[1])
-            self.get_title()
-            self.df = self.df_creator.get_df(self.date,self.title)
-            self.set_table()
+            if selected_item[0]=="Total":
+                selected_item="Total_dia"
+                self.title=f"Total_dia"
+                self.bill_path=self.folder_path+self.title                
+                self.df = self.df_creator.get_df(self.date,self.title)
+                self.set_table()
+            else:
+                self.viewable_bill=int(selected_item[1])
+                self.get_title()
+                self.df = self.df_creator.get_df(self.date,self.title)
+                self.set_table()
         
 
     def get_title(self):
@@ -196,15 +213,16 @@ class BillingPage(tk.Frame):
         self.df_creator.save_bill()
         self.update_selector_list()
         #print(self.title)
-        self.viewable_bill = self.number_bills
-        self.number_bills += 1
-        self.get_title()
-        #print(self.title)
-        self.df = self.df_creator.get_df(self.date,self.title)
-        self.set_table()
 
     def new_bill(self):
         self.save_bill()
+        self.update_selector_list()
+        self.viewable_bill = self.number_bills
+        self.number_bills += 1
+        self.get_title()
+        self.update_selector_list()
+        self.df = self.df_creator.get_df(self.date,self.title)
+        self.set_table()
         self.df=self.df
 
     def get_number_bills(self):
@@ -232,6 +250,11 @@ class BillingPage(tk.Frame):
         self.set_total()
         
 
+    def end_day(self):
+        self.save_bill()
+        titles=self.selector_listbox.get(0,tk.END)
+        self.df_creator.end_day_calc(titles)
+        self.set_table(1)
 
 
     def update_gui(self):
