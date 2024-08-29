@@ -172,6 +172,7 @@ class BillingPage(tk.Frame):
             self.selector_listbox.insert(tk.END, f"Factura_{self.viewable_bill}")
 
     def on_bill_select(self, event):
+        
         selected_index=self.selector_listbox.curselection()
         if selected_index:
             selected_item=str(self.selector_listbox.get(selected_index)).split("_")
@@ -188,8 +189,12 @@ class BillingPage(tk.Frame):
                 self.set_table()
         
 
-    def get_title(self):
-        self.title = f"Factura_{self.viewable_bill}"
+    def get_title(self,end_day=None):
+        if end_day:
+            self.title = f"Total_dia"
+        else:
+            self.title = f"Factura_{self.viewable_bill}"
+        
         if self.folder_path!=None:
             self.bill_path=self.folder_path+self.title
 
@@ -231,6 +236,11 @@ class BillingPage(tk.Frame):
             self.viewable_bill = 0
         else:
             files = os.listdir(self.folder_path)
+            f_path=os.path.join(self.folder_path,"Total_dia.csv")
+        
+            if os.path.exists(f_path):
+                os.remove(os.path.abspath(f_path))
+
             numbers = sum(1 for f in files if os.path.isfile(os.path.join(self.folder_path, f)) 
                           and f.endswith(".csv") and f.startswith("Factura"))
             self.number_bills = numbers
@@ -255,6 +265,7 @@ class BillingPage(tk.Frame):
         titles=self.selector_listbox.get(0,tk.END)
         self.df_creator.end_day_calc(titles)
         self.set_table(1)
+        
 
 
     def update_gui(self):

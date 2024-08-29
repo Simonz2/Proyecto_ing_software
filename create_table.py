@@ -53,11 +53,14 @@ class CreateTable:
         total_df["Cantidad"]=pd.to_numeric(total_df["Cantidad"],errors="coerce").fillna(0)
         
         for i in titles:
-            df=self.get_df(d,i)
-            df["Total"]=pd.to_numeric(df["Total"],errors="coerce").fillna(0)
-            df["Cantidad"]=pd.to_numeric(df["Cantidad"],errors="coerce").fillna(0)
-            total_df["Total"]=total_df["Total"]+df["Total"]
-            total_df["Cantidad"]=total_df["Cantidad"]+df["Cantidad"]
+            if i!="Total_dia":
+                df=self.get_df(d,i)
+                df["Total"]=pd.to_numeric(df["Total"],errors="coerce").fillna(0)
+                df["Cantidad"]=pd.to_numeric(df["Cantidad"],errors="coerce").fillna(0)
+                total_df["Total"]=total_df["Total"]+df["Total"]
+                total_df["Cantidad"]=total_df["Cantidad"]+df["Cantidad"]
+            else:
+                pass
         total_df["Total"]=total_df["Total"].replace(0,"")
         total_df["Cantidad"]=total_df["Cantidad"].replace(0,"")
         

@@ -5,6 +5,7 @@ from PIL import Image,ImageTk
 from tkinter import filedialog
 from paths_finder import PathsFinder
 import os
+import time
 
 
 class MainPage(tk.Frame):
@@ -82,24 +83,39 @@ class MainPage(tk.Frame):
         self.business_insights_button_window=self.canvas.create_window(265,450,anchor="nw",window=self.business_insights_button)
 
     def billing_button_show(self):
-        try:  
-            #if the folder hasn't been already selected
-            if self.folder_selected == None:
-                #select the folder to save the bill of the day
-                self.folder_selected=filedialog.askdirectory()
-            
-                #is the folder path correct?
-                if os.path.isdir(self.folder_selected):
-                    paths_finder=PathsFinder()
-                    paths_finder.save_folder_path(self.date,self.folder_selected)
+        while True: 
+            try:  
+                #if the folder hasn't been already selected
+                if self.folder_selected is None:
+                    #select the folder to save the bill of the day
+                    self.folder_selected=filedialog.askdirectory()
+
+                  
+
+                    #check if the user pressed cancel
+                    if not self.folder_selected:
+                        raise Exception("No folder selected")
+                
+                    #is the folder path correct?
+                    if os.path.isdir(self.folder_selected):
+                        paths_finder=PathsFinder()
+                        paths_finder.save_folder_path(self.date,self.folder_selected)
+                        self.controller.folder=self.folder_selected
+                        self.controller.show_billing_page()
+                        break
+                    else:#else call again the funtion to choose again the folder
+                        print("Folder path is not correct")
+                        raise Exception
+                    
+                else:
                     self.controller.show_billing_page()
-                else:#else call again the funtion to choose again the folder
-                    raise Exception
-                self.controller.folder=self.folder_selected
-            else:
-                self.controller.show_billing_page()
-        except Exception:
-            self.show_error_msg("Seleccionar una carpeta adecuada")
+                    break
+            except Exception:
+                self.show_error_msg("Por favor seleccione una carpeta adecuada")
+                time.sleep(1)
+                self.folder_selected=None
+                
+            
     
     def save_date(self):
         try:
