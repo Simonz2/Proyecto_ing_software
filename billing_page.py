@@ -265,6 +265,7 @@ class BillingPage(tk.Frame):
         titles=self.selector_listbox.get(0,tk.END)
         self.df_creator.end_day_calc(titles)
         self.set_table(1)
+        self.get_title(1)
         
 
 
