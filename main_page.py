@@ -6,17 +6,21 @@ from tkinter import filedialog
 from paths_finder import PathsFinder
 import os
 import time
+import app
+
 
 
 class MainPage(tk.Frame):
     def __init__(self, master,controller,window_size,date=None,folder=None):
         super().__init__(master)
         
-        self.controller=controller
-        self.root = master
-        self.window_size=window_size
+        self.controller:app.App=controller
+        self.root= master
+        self.window_size:tuple=window_size
         self.date=date
         self.folder_selected=folder
+
+        self.dic_creator=CreateDict()
         #Load and Set background image
         self.setup_background()
 
@@ -62,8 +66,8 @@ class MainPage(tk.Frame):
             self.setup_buttons()
 
     def setup_background(self):
-        dic_creator=CreateDict()
-        bg_path=dic_creator.dic.get("background")
+        
+        bg_path=self.dic_creator.dic.get("background")
         image = Image.open(bg_path)  # Open the image file
         image = image.resize(self.window_size, Image.Resampling.LANCZOS)  # Resize image to fit the window
         self.bg_image = ImageTk.PhotoImage(image)  # Convert to PhotoImage
@@ -75,12 +79,29 @@ class MainPage(tk.Frame):
         
     def setup_buttons(self):
         #Create buttons and place them on the canvas
-        self.billing_button=ttk.Button(self,text="Facturacion",command=self.billing_button_show)
-        self.billing_button_window=self.canvas.create_window(120,450,anchor="nw",window=self.billing_button)
+        a=1
         
+        #get the icon for the bill button
+        self.bill_ico_img=tk.PhotoImage(file=self.dic_creator.dic.get("bill_icon")).subsample(a,a)
+        #set the text and image in the billing button
+        self.billing_button=ttk.Button(self,text="Facturacion",command=self.billing_button_show,
+                                       image=self.bill_ico_img,compound="left")  
+        
+        self.billing_button_window=self.canvas.create_window(120,400,anchor="nw",window=self.billing_button)
+        
+        #get the image for the stats button
+        self.stats_ico_img=tk.PhotoImage(file=self.dic_creator.dic.get("stats_icon")).subsample(a,a)
+        #set the text and image in the business insights button
+        self.business_insights_button=ttk.Button(self,text="Metricas de negocio",command=self.controller.show_insights_page,
+                                                 image=self.stats_ico_img,compound="left")
+        self.business_insights_button_window=self.canvas.create_window(265,400,anchor="nw",window=self.business_insights_button)
 
-        self.business_insights_button=ttk.Button(self,text="Metricas de negocio",command=self.controller.show_insights_page)
-        self.business_insights_button_window=self.canvas.create_window(265,450,anchor="nw",window=self.business_insights_button)
+        #get the image for the clients button
+        self.clients_ico_img=tk.PhotoImage(file=self.dic_creator.dic.get("client_icon")).subsample(a,a)
+        #set the text and image in the clients button
+        self.clients_button=ttk.Button(self,text="Clientes",command=self.controller.show_clients_page,
+                                       image=self.clients_ico_img,compound="left")
+        self.clients_button_window=self.canvas.create_window(120,500,anchor="nw",window=self.clients_button)
 
     def billing_button_show(self):
         while True: 

@@ -1,11 +1,21 @@
 import json
 import os
+import sys
+
+#https://stackoverflow.com/questions/31836104/pyinstaller-and-onefile-how-to-include-an-image-in-the-exe-file
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS2
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 class CreateDict:
 
     def __init__(self):
-        self.path=r"data/paths.json"
-        self.data_directory=r"data"
+        self.path=resource_path("data\\paths.json")
+        self.data_directory=resource_path("data")
 
         if os.path.exists(self.path):
             self.dic=json.load(open(self.path))    
@@ -14,6 +24,7 @@ class CreateDict:
             self.dic={}
             self.get_paths()
             self.save_dic()
+
         
 
 

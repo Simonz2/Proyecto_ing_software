@@ -1,4 +1,11 @@
-import pandas as pd
-from paths_finder import PathsFinder
-a=PathsFinder()
-a.save_folder_path("2024/8/28","D://Proyectos//carpeta_prueba_facturacion//agosto//28")
+from math import pow
+pedf=0.99
+pf=1/100000
+pnf=1-pf
+pnednf=0.995
+pednf=1-pnednf
+pfde=pedf*pf/((pedf*pf)+(pednf*pnf))
+pnedf=1-pedf
+pnfdne=pnednf*pnf/((pnednf*pnf)+(pnedf*pf))
+print(pfde)
+print(pnfdne)
