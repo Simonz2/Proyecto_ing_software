@@ -103,6 +103,13 @@ class MainPage(tk.Frame):
                                        image=self.clients_ico_img,compound="left")
         self.clients_button_window=self.canvas.create_window(120,500,anchor="nw",window=self.clients_button)
 
+        #get image for the menu button
+        self.menu_ico_img=tk.PhotoImage(file=self.dic_creator.dic.get("menu_icon")).subsample(a,a)
+        #set the text and image in the menu button
+        self.menu_button=ttk.Button(self,text="Menu",command=self.controller.show_menu_page,
+                                       image=self.menu_ico_img,compound="left")
+        self.menu_button_window=self.canvas.create_window(265,500,anchor="nw",window=self.menu_button)
+
     def billing_button_show(self):
         while True: 
             try:  
