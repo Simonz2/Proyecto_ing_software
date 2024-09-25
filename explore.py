@@ -48,8 +48,8 @@ def print_bill(client,tip,delivery_fee,date:str,df:pd.DataFrame):
         pdf.drawCentredString(width / 2, text_height, text=suptitle[i])
     #draw 3 line where the bill start
     text_height=length-height-2*cm
-    header=f"{'PDTO':<27}{'UDS':<5}{'VALOR':<13}"
-    pdf.drawString(1*cm,text_height,text=header)
+    header=f"{'PDTO':<33}{'UDS':<5}{'VALOR':<15}"
+    pdf.drawString(0.5*cm,text_height,text=header)
     print
     for idx,line in df.iterrows():
         line=list(line)
@@ -57,23 +57,23 @@ def print_bill(client,tip,delivery_fee,date:str,df:pd.DataFrame):
             pass
         else:
             text_height-=0.5*cm
-            pdf.drawString(1 * cm, text_height, f"{line[0]:<20}")
-            pdf.drawString(33 * mm, text_height, f"{line[2]:<5}")
-            pdf.drawString(42 * mm, text_height, f"{line[3]:<15}")
+            pdf.drawString(0.5 * cm, text_height, f"{str(line[0])[:17]:<33}")
+            pdf.drawString(40 * mm, text_height, f"{line[2]:<5}")
+            pdf.drawString(49 * mm, text_height, f"{line[3]:<15}")
             subtotal+=int(line[3])
     text_height-=1*cm
-    pdf.drawString(1 * cm, text_height, "SUBTOTAL")
-    pdf.drawString(42*mm,text_height,text=f"$ {subtotal}")
+    pdf.drawString(0.5 * cm, text_height, "SUBTOTAL")
+    pdf.drawString(49*mm,text_height,text=f"$ {subtotal}")
     text_height-=0.5*cm
-    pdf.drawString(1 * cm, text_height, "SERVICIO")
-    pdf.drawString(42*mm,text_height,text=f"$ {subtotal*tip/100}")
+    pdf.drawString(0.5 * cm, text_height, "SERVICIO")
+    pdf.drawString(49*mm,text_height,text=f"$ {subtotal*tip/100}")
     text_height-=0.5*cm
-    pdf.drawString(1 * cm, text_height, "DOMICILIO")
-    pdf.drawString(42*mm,text_height,text=f"$ {delivery_fee}")
+    pdf.drawString(0.5 * cm, text_height, "DOMICILIO")
+    pdf.drawString(49*mm,text_height,text=f"$ {delivery_fee}")
     text_height-=0.5*cm
     total=subtotal+delivery_fee+subtotal*tip/100
-    pdf.drawString(1 * cm, text_height, "TOTAL")
-    pdf.drawString(42*mm,text_height,text=f"$ {total}")
+    pdf.drawString(0.5 * cm, text_height, "TOTAL")
+    pdf.drawString(49*mm,text_height,text=f"$ {total}")
     pdf.save()
     print_pdf(filename)
 

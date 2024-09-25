@@ -47,8 +47,8 @@ class Printing:
             pdf.drawCentredString(width / 2, text_height, text=suptitle[i])
         #draw 3 line where the bill start
         text_height=length-height-2*cm
-        header=f"{'PDTO':<27}{'UDS':<5}{'VALOR':<13}"
-        pdf.drawString(1*cm,text_height,text=header)
+        header=f"{'PDTO':<33}{'UDS':<5}{'VALOR':<15}"
+        pdf.drawString(0.5*cm,text_height,text=header)
         
         for idx,line in df.iterrows():
             line=list(line)
@@ -56,23 +56,23 @@ class Printing:
                 pass
             else:
                 text_height-=0.5*cm
-                pdf.drawString(1 * cm, text_height, f"{str(line[0])[:15]:<22}")  # Truncate to 20 characters, pad if shorter
+                pdf.drawString(0.5 * cm, text_height, f"{str(line[0])[:16]:<33}")  # Truncate to 20 characters, pad if shorter
                 pdf.drawString(40 * mm, text_height, f"{str(line[2]):<5}")       # Same logic applies to other lines
-                pdf.drawString(47 * mm, text_height, f"{str(line[3]):<13}")
+                pdf.drawString(49 * mm, text_height, f"{str(line[3]):<15}")
                 subtotal+=line[3]
         text_height-=1*cm
-        pdf.drawString(1 * cm, text_height, "SUBTOTAL")
-        pdf.drawString(42*mm,text_height,text=f"$ {subtotal}")
+        pdf.drawString(0.5 * cm, text_height, "SUBTOTAL")
+        pdf.drawString(40*mm,text_height,text=f"$ {subtotal}")
         text_height-=0.5*cm
-        pdf.drawString(1 * cm, text_height, "SERVICIO")
-        pdf.drawString(42*mm,text_height,text=f"$ {subtotal*tip/100}")
+        pdf.drawString(0.5 * cm, text_height, "SERVICIO")
+        pdf.drawString(40*mm,text_height,text=f"$ {subtotal*tip/100}")
         text_height-=0.5*cm
-        pdf.drawString(1 * cm, text_height, "DOMICILIO")
-        pdf.drawString(42*mm,text_height,text=f"$ {delivery_fee}")
+        pdf.drawString(0.5 * cm, text_height, "DOMICILIO")
+        pdf.drawString(40*mm,text_height,text=f"$ {delivery_fee}")
         text_height-=0.5*cm
         total=subtotal+delivery_fee+subtotal*tip/100
-        pdf.drawString(1 * cm, text_height, "TOTAL")
-        pdf.drawString(42*mm,text_height,text=f"$ {total}")
+        pdf.drawString(0.5 * cm, text_height, "TOTAL")
+        pdf.drawString(40*mm,text_height,text=f"$ {total}")
         pdf.save()
         self.print_pdf(filename)
 

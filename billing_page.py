@@ -224,7 +224,8 @@ class BillingPage(tk.Frame):
             delivery_fee=int(pdf)
         if ptip and ptip.isdigit():
             tip=int(ptip)
-        
+        self.delivery_entry.delete(0,tk.END)
+        self.tip_entry.delete(0,tk.END)
         self.df_creator.print_bill(tip,delivery_fee)
         # Add printing functionality here
 
