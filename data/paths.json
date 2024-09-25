@@ -1,5 +1,5 @@
 {"background": "data\\background.jpg", 
-"logo": "data\\logo.png", "Productos": "data\\Productos.csv",
+"logo": "data\\logo.jpg", "Productos": "data\\Productos.csv",
  "save_paths": "data\\save_paths.csv","icon":"data\\icon.ico",
 "bill_icon":"data\\bill_icon.png","client_icon":"data\\client_icon.png",
 "stats_icon":"data\\stats_icon.png","menu_icon":"data\\menu_icon.png",

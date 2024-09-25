@@ -2,6 +2,11 @@ import pandas as pd
 from create_dic import CreateDict
 import os
 from paths_finder import PathsFinder
+from reportlab.pdfgen import canvas 
+from reportlab.pdfbase.ttfonts import TTFont 
+from reportlab.pdfbase import pdfmetrics 
+from reportlab.lib import colors
+from printing import Printing
 
 
 class CreateTable:
@@ -69,5 +74,7 @@ class CreateTable:
         if os.path.exists(f_path):
             os.remove(os.path.abspath(f_path))
         total_df.to_csv(f_path,index=False,sep=";",na_rep="")       
-    
+    def print_bill(self,tip,delivery_fee):
+        self.p=Printing(tip,delivery_fee,self.date,self.df)
+
 

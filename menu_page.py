@@ -112,7 +112,7 @@ class MenuPage(tk.Frame):
         
         price=int(price)
         if product in self.df["PDTO"].values:
-            self.df.loc[self.df["PDTO"]==product]=price
+            self.df.loc[self.df["PDTO"]==product,"VALOR"]=price
             messagebox.showinfo("Actualizado",f"Precio de producto {product} fue actualizado")
         else:
             self.df.loc[len(self.df.index)]=[product,price]
@@ -120,8 +120,9 @@ class MenuPage(tk.Frame):
         
         self.name_entry.delete(0,tk.END)  
         self.price_entry.delete(0,tk.END)
-        self.load_data
+        
         self.save_edit()
+        self.load_data()
 
     def delete_product(self):
         selected_item=self.treeview.focus()

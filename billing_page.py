@@ -123,9 +123,6 @@ class BillingPage(tk.Frame):
         self.get_back_button = ttk.Button(self.top_frame, text="Pagina Principal", command=self.controller.show_main_page)
         self.get_back_button.pack(side=tk.LEFT, padx=5, pady=5)
 
-        self.print_button = ttk.Button(self.top_frame, text="Imprimir factura", command=self.print_bill)
-        self.print_button.pack(side=tk.LEFT, padx=5, pady=5)
-
         self.save_bill_button = ttk.Button(self.top_frame, text="Guardar factura", command=self.save_bill)
         self.save_bill_button.pack(side=tk.LEFT, padx=5, pady=5)
 
@@ -137,6 +134,16 @@ class BillingPage(tk.Frame):
 
         self.bill_title_socket=ttk.Label(self.top_frame,text="")
         self.bill_title_socket.pack(side=tk.LEFT,padx=5,pady=5)
+
+        self.print_button = ttk.Button(self.top_frame, text="Imprimir factura", command=self.print_bill)
+        self.print_button.pack(side=tk.LEFT, padx=5, pady=5)
+        
+        tk.Label(self.top_frame,text="Propina").pack(side=tk.LEFT,padx=5)
+        self.tip_entry=tk.Entry(self.top_frame)
+        self.tip_entry.pack(side=tk.LEFT,padx=5)
+        tk.Label(self.top_frame,text="Domicilio").pack(side=tk.LEFT,padx=5)
+        self.delivery_entry=tk.Entry(self.top_frame)
+        self.delivery_entry.pack(side=tk.LEFT,padx=5)
         
         self.bill_total_label=ttk.Label(self.top_frame,text="Total factura")
         self.bill_total_label.pack(side=tk.RIGHT,padx=5,pady=5)
@@ -209,6 +216,16 @@ class BillingPage(tk.Frame):
 
     def print_bill(self):
         self.save_bill()
+        delivery_fee=0
+        tip=0
+        pdf=self.delivery_entry.get().strip()
+        ptip=self.tip_entry.get().strip()
+        if pdf and pdf.isdigit():
+            delivery_fee=int(pdf)
+        if ptip and ptip.isdigit():
+            tip=int(ptip)
+        
+        self.df_creator.print_bill(tip,delivery_fee)
         # Add printing functionality here
 
     def save_bill(self):
